@@ -1,0 +1,174 @@
+/* Flash CSS Custom Properties */
+:root {
+    --flash-label-bg: #F47D1A;
+    --flash-label-color: #000000;
+    --flash-highlight-color: #F47D1A;
+    --flash-dim-opacity: 0.4;
+}
+
+/* Hint label for Jump to Link / Jump to Anywhere (inline after target) */
+.flash-hint-label {
+    display: inline-block;
+    background: var(--flash-label-bg);
+    color: var(--flash-label-color);
+    padding: 0 2px;
+    margin-left: 1px;
+    border-radius: 2px;
+    font-weight: normal;
+    font-size: 0.85em;
+    line-height: 1.2;
+    vertical-align: baseline;
+    position: relative;
+    z-index: 10;
+}
+
+/* First letter dimmed when prefix matched */
+.flash-hint-label.matched::first-letter {
+    opacity: 0.5;
+}
+
+/* Legacy popover styling for Preview mode (DOM-based hints, not CM6 widgets) */
+.jl.popover {
+    position: absolute;
+    display: block;
+    z-index: 10000;
+    background: var(--flash-label-bg);
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgb(227, 157, 35);
+    font-size: 11px;
+    font-weight: normal;
+    line-height: 12px;
+    color: var(--flash-label-color);
+    padding: 1px 2px;
+    border-radius: 2px;
+}
+
+.jl.popover.matched::first-letter {
+    opacity: 0.5;
+}
+
+.theme-dark, .theme-light {
+    --flash-color: var(--text-muted);
+}
+
+/* Flash mode - gray out ALL text while preserving font sizes/styles */
+.flash-active,
+.flash-active * {
+    color: var(--flash-color) !important;
+}
+
+/* Ensure specific elements are also grayed out */
+.flash-active .cm-header,
+.flash-active .cm-link,
+.flash-active .cm-url,
+.flash-active .cm-hmd-internal-link,
+.flash-active .cm-formatting,
+.flash-active .cm-strong,
+.flash-active .cm-em,
+.flash-active .cm-strikethrough,
+.flash-active .cm-inline-code,
+.flash-active .cm-math,
+.flash-active .cm-hashtag,
+.flash-active .cm-tag,
+.flash-active .cm-highlight,
+.flash-active .cm-list-1,
+.flash-active .cm-list-2,
+.flash-active .cm-list-3,
+.flash-active .HyperMD-codeblock,
+.flash-active .HyperMD-quote,
+.flash-active .HyperMD-header,
+.flash-active .HyperMD-list-line,
+.flash-active .HyperMD-task-line,
+.flash-active a,
+.flash-active strong,
+.flash-active em,
+.flash-active code,
+.flash-active mark {
+    color: var(--flash-color) !important;
+}
+
+/* Keep hint labels visible and prominent */
+.flash-active .jl.popover,
+.flash-active .flash-hint-label {
+    color: var(--flash-label-color) !important;
+}
+
+/* Flash highlight for matched characters */
+.flash-highlight {
+    color: var(--flash-highlight-color) !important;
+}
+
+/* Flash label (positioned after match) */
+.flash-label {
+    display: inline-block;
+    background: var(--flash-label-bg);
+    color: var(--flash-label-color);
+    padding: 0 2px;
+    margin-left: 1px;
+    border-radius: 2px;
+    font-weight: normal;
+    font-size: 0.85em;
+    line-height: 1.2;
+    vertical-align: baseline;
+    position: relative;
+    z-index: 10;
+}
+
+/* First letter dimmed when prefix matched */
+.flash-label.matched::first-letter {
+    opacity: 0.5;
+}
+
+/* Ensure highlighted matches NOT dimmed and labels use correct color */
+/* High specificity to override URL, link, and other element styling */
+.flash-active .flash-highlight,
+.flash-active .cm-url .flash-highlight,
+.flash-active .cm-link .flash-highlight,
+.flash-active .cm-hmd-internal-link .flash-highlight,
+.flash-active a .flash-highlight,
+.flash-active .cm-string .flash-highlight,
+.flash-active .cm-header .flash-highlight,
+.flash-active .cm-strong .flash-highlight,
+.flash-active .cm-em .flash-highlight,
+.flash-active code .flash-highlight {
+    color: var(--flash-highlight-color) !important;
+    opacity: 1 !important;
+}
+
+.flash-active .flash-label {
+    opacity: 1 !important;
+    color: var(--flash-label-color) !important;
+}
+
+/* Flash Search Panel */
+.flash-search-panel {
+    position: fixed;
+    top: 50px;
+    right: 20px;
+    min-width: 60px;
+    max-width: 15%;
+    padding: 6px 12px;
+    background: var(--background-secondary);
+    border: 1px solid var(--background-modifier-border);
+    border-radius: 6px;
+    font-family: var(--font-monospace);
+    font-size: 14px;
+    color: var(--text-normal);
+    z-index: 1000;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.flash-search-text {
+    color: var(--text-accent);
+}
+
+.flash-search-cursor {
+    color: var(--text-accent);
+    animation: flash-cursor-blink 1s step-end infinite;
+}
+
+@keyframes flash-cursor-blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
