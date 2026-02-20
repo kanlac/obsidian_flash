@@ -40,20 +40,8 @@ export class FlashMatchDetector {
         }
 
         const matches = this.getRawMatches(searchString, content, index);
-        const nextChars = new Set<string>();
-
-        // Collect the character immediately after each match (flash.nvim style)
-        for (const match of matches) {
-            // Collect the character immediately after the match (flash.nvim style)
-            // This prevents labels from conflicting with search extension
-            const nextCharIndex = (match.index - index) + match.linkText.length;
-            if (nextCharIndex < content.length) {
-                const nextChar = content[nextCharIndex].toLowerCase();
-                // Only exclude printable characters (not whitespace or newlines)
-                if (nextChar && /\S/.test(nextChar)) {
-                    nextChars.add(nextChar);
-                }
-            }
+        if (matches.length === 0) {
+            return [];
         }
 
         // Filter to only truly visible ranges (viewport includes off-screen buffer)
@@ -65,9 +53,14 @@ export class FlashMatchDetector {
                 match.index >= range.from && match.index < range.to
             );
         });
-        // Generate labels, excluding characters that appear after matches
-        // This ensures pressing a "next char" always extends the search rather than jumping
-        const labels = generateHintLabels(this.settings.letters, visibleMatches.length, nextChars);
+        if (visibleMatches.length === 0) {
+            return [];
+        }
+
+        // Exclude label keys that can continue the current search.
+        // This is more robust than filtering only by text next-char.
+        const continuationConflicts = this.collectSearchConflictChars(searchString, content, index);
+        const labels = generateHintLabels(this.settings.letters, visibleMatches.length, continuationConflicts);
 
         // Assign labels to visible matches (matches are already in order by index)
         for (let i = 0; i < visibleMatches.length && i < labels.length; i++) {
@@ -76,6 +69,24 @@ export class FlashMatchDetector {
 
         // Return only visible matches that have labels assigned
         return visibleMatches.filter(m => m.letter);
+    }
+
+    private collectSearchConflictChars(searchString: string, content: string, index: number): Set<string> {
+        const conflicts = new Set<string>();
+        const candidates = Array.from(new Set(this.settings.letters.toLowerCase().split('')))
+            .filter(char => /\S/.test(char));
+
+        for (const candidate of candidates) {
+            const extendedMatches = this.getRawMatches(`${searchString}${candidate}`, content, index);
+            if (extendedMatches.length > 0) {
+                conflicts.add(candidate);
+                if (conflicts.size === candidates.length) {
+                    break;
+                }
+            }
+        }
+
+        return conflicts;
     }
 
     private getRawMatches(searchString: string, content: string, index: number): FlashMatch[] {

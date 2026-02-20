@@ -583,5 +583,17 @@ describe('FlashMatchDetector', () => {
       expect(matches[0].linkText).toBe('hello');
     });
 
+    it('should avoid label chars that can continue pyjj search', () => {
+      settings.letters = 'sadfjklewcmpgh';
+      detector = createDetector('中国中国');
+
+      const matches = detector.findMatches('vy');
+
+      expect(matches.length).toBeGreaterThan(0);
+      matches.forEach(match => {
+        expect(match.letter).not.toContain('g');
+      });
+    });
+
   });
 });
