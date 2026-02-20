@@ -453,6 +453,9 @@ export class FlashController {
      */
     private registerKeyHandler(): void {
         this.keydownHandler = (event: KeyboardEvent) => {
+            if (event.isComposing || event.key === 'Process') {
+                return;
+            }
             event.preventDefault();
             event.stopPropagation();
             this.handleKeyDown(event.key, event.shiftKey);

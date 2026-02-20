@@ -48,7 +48,8 @@ export default class FlashPlugin extends Plugin {
     private legacyFlashContainer: HTMLElement | null = null;
 
     async onload() {
-        this.settings = await this.loadData() || new Settings();
+        const storedSettings = await this.loadData();
+        this.settings = Object.assign(new Settings(), storedSettings || {});
 
         // Migrate old default regex to Unicode-aware version
         const OLD_DEFAULT_REGEX = '\\b\\w{3,}\\b';

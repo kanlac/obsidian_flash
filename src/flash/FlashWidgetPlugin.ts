@@ -15,7 +15,6 @@ import { FlashLabelWidget } from "./FlashLabelWidget";
 export class FlashWidgetPlugin {
     decorations: DecorationSet = Decoration.none;
     private matches: FlashMatch[] = [];
-    private searchLength: number = 0;
     private matchedKey: string = '';
 
     constructor(private view: EditorView, private settings: Settings) {}
@@ -23,11 +22,10 @@ export class FlashWidgetPlugin {
     /**
      * Set matches to display and build decorations.
      * @param matches Array of Flash matches with positions and labels
-     * @param searchLength Length of the search string (for highlight range)
+     * @param searchLength Length of the search string (unused, kept for compatibility)
      */
-    setMatches(matches: FlashMatch[], searchLength: number): void {
+    setMatches(matches: FlashMatch[], _searchLength: number): void {
         this.matches = matches;
-        this.searchLength = searchLength;
         this.matchedKey = '';
         this.buildDecorations();
     }
@@ -68,11 +66,13 @@ export class FlashWidgetPlugin {
             .getPropertyValue('--flash-highlight-color').trim() || '#F47D1A';
 
         for (const match of this.matches) {
+            const matchEnd = match.index + match.matchLength;
+
             // 1. Highlight decoration - use mark to preserve existing formatting
             // Inline style ensures color overrides parent styling (URLs, links, etc.)
             decorations.push({
                 from: match.index,
-                to: match.index + this.searchLength,
+                to: matchEnd,
                 value: Decoration.mark({
                     class: 'flash-highlight',
                     attributes: { style: `color: ${highlightColor} !important;` }
@@ -81,7 +81,7 @@ export class FlashWidgetPlugin {
 
             // 2. Label decoration - use widget to insert after match without replacing text
             const fontInfo = this.getFontInfo(match.index);
-            const labelStart = match.index + this.searchLength;
+            const labelStart = matchEnd;
 
             decorations.push({
                 from: labelStart,

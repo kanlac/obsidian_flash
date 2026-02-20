@@ -126,6 +126,21 @@ export class FlashSettingsTab extends PluginSettingTab {
         // ===== Flash Settings =====
         containerEl.createEl('h3', { text: 'Flash Mode' });
 
+        // Input mode dropdown
+        new Setting(containerEl)
+            .setName('Input mode')
+            .setDesc('Choose how typed keys match text in Flash mode.')
+            .addDropdown((dropdown) => {
+                dropdown
+                    .addOption('literal', 'Literal (default)')
+                    .addOption('zh-pyjj', 'Chinese Shuangpin (PyJJ)')
+                    .setValue(this.plugin.settings.flashInputMode)
+                    .onChange(async (value: 'literal' | 'zh-pyjj') => {
+                        this.plugin.settings.flashInputMode = value;
+                        await this.plugin.saveData(this.plugin.settings);
+                    });
+            });
+
         // Case sensitivity toggle
         new Setting(containerEl)
             .setName('Case sensitive')

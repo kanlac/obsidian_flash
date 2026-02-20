@@ -550,4 +550,38 @@ describe('FlashMatchDetector', () => {
       expect(matches.length).toBe(0);
     });
   });
+
+  describe('findMatches - zh-pyjj mode', () => {
+    beforeEach(() => {
+      settings.flashInputMode = 'zh-pyjj';
+    });
+
+    it('should match Chinese text by pyjj shuangpin', () => {
+      detector = createDetector('中国，世界');
+
+      const matches = detector.findMatches('vygo');
+
+      expect(matches.length).toBeGreaterThan(0);
+      expect(matches[0].linkText).toBe('中国');
+    });
+
+    it('should support case-insensitive pyjj input', () => {
+      detector = createDetector('中国');
+
+      const matches = detector.findMatches('VYGO');
+
+      expect(matches.length).toBeGreaterThan(0);
+      expect(matches[0].linkText).toBe('中国');
+    });
+
+    it('should keep literal matching for English in zh-pyjj mode', () => {
+      detector = createDetector('你好 hello');
+
+      const matches = detector.findMatches('hello');
+
+      expect(matches.length).toBe(1);
+      expect(matches[0].linkText).toBe('hello');
+    });
+
+  });
 });

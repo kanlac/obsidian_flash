@@ -36,5 +36,8 @@
     "typescript": "^4.6.2",
     "wdio-obsidian-reporter": "^2.2.0",
     "wdio-obsidian-service": "^2.2.0"
+  },
+  "dependencies": {
+    "pinyin-pro": "^3.28.0"
   }
 }

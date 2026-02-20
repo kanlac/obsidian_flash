@@ -7,6 +7,7 @@ Flash brings the speed of [flash.nvim](https://github.com/folke/flash.nvim) and 
 ## Features
 
 - **Flash Mode** — Incremental search with live-updating labels. Type characters to narrow matches, press a label to jump.
+- **Chinese Shuangpin (PyJJ)** — Optional Flash input mode: type 拼音加加双拼 to jump Chinese text.
 - **Jump to Link** — Navigate to any link (`[[wiki]]`, `[markdown](url)`, plain URLs) with a single keypress.
 - **Jump to Anywhere** — Regex-based navigation to jump to any word or pattern.
 - **Smart labels** — Labels never conflict with the next character after a match, so you can keep typing naturally.
@@ -96,6 +97,7 @@ nmap <Space>j :jumpAnywhere<CR>
 
 | Setting | Description | Default |
 |---------|-------------|---------|
+| Input mode | `literal` or `zh-pyjj` (拼音加加双拼) | `literal` |
 | Minimum characters | Characters needed before showing labels | `2` |
 | Case sensitive | Match case when searching | Off |
 | Jump position | Where cursor lands: match start/end, word start/end | Match end |

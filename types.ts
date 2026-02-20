@@ -86,6 +86,7 @@ export class Settings {
 
 	// Flash mode settings
 	flashCaseSensitive: boolean = false;
+	flashInputMode: 'literal' | 'zh-pyjj' = 'literal';
 	flashJumpPosition: 'match-start' | 'match-end' | 'after-match-end' | 'word-start' | 'word-end' | 'after-word-end' = 'match-end';
 	flashJumpPositionCapital: 'match-start' | 'match-end' | 'after-match-end' | 'word-start' | 'word-end' | 'after-word-end' = 'match-start';
 	flashCharacterCount: number = 2;
